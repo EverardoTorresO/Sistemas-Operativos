@@ -36,18 +36,18 @@ void instructionInterpreter( char *entrada, char ***argumentos)
     {
         for (; i < MAX_ARGS; i++)
         {
-            mvprintw(i, 0, "Borrando %d", i);
+            //mvprintw(i, 0, "Borrando %d", i);
             refresh();
-            napms(1000);
+            napms(DELAY_TIMER);
             args[i] = "\0";
         }
          erase();
         for (int i=0; i < MAX_ARGS; i++)
         {
            
-            mvprintw(i, 0, "Argumentos:%s", args[i]);
+            //mvprintw(i, 0, "Argumentos:%s", args[i]);
             refresh();
-            napms(1000);
+            napms(DELAY_TIMER);
             
         }
     }

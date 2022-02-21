@@ -3,7 +3,8 @@
 #include "interprete.h"
 #include "operaciones.h"
 #include "default.h"
-NUM lastAX, lastBX, lastCX, lastDX, lastTMP, PC;
+NUM AX, BX, CX, DX, TMP, PC;
+char IR[4];
 void clearLineComand(int y, int x)
 {
     move(y, x);
@@ -31,24 +32,58 @@ int kbhit(void)
 
     return 0;
 }
-void tokenizerPrint(FILE *Archivo)
-{   char *print;
-    printf("IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, lastAX, lastBX, lastCX, lastDX);
+int tokenizerPrint(FILE *Archivo)
+{
+    int FLAG_TOKEN = 0;
+    char *print = malloc(100);
+
+    sprintf(print, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
+    mvprintw(2, 0, "%s\n", print);
     char str[30];
-    int i = 1;
-    int renglon=5;
+    int renglon = 3;
     while (fgets(str, sizeof(str), Archivo) != NULL)
     {
         int len = strlen(str);
         // Verificamos si el último caracter es un salto de línea
+
         if (str[len - 1] == '\n')
             // Eliminamos el salto de línea
             str[len - 1] = '\0';
-        if (!executeToken(&print,str,i))
+
+        FLAG_TOKEN = executeToken(&print, str);
+        switch (FLAG_TOKEN)
+        {
+        case 0:
+            printf("Linea Vacia: No Execute\n");
             break;
-        mvprintw(renglon,0,print);
-        renglon++;
-        i++;
+        case 1:
+            move(++renglon, 0);
+            printw("BAD REGISTER\n");
+            refresh();
+            return -1;
+        case 2:
+            move(++renglon, 0);
+            printw("END\n");
+            refresh();
+            return -2;
+        case 3:
+            move(++renglon, 0);
+            printw("Divide By Cero\n");
+            refresh();
+            return -2;
+            break;
+        case 4:
+            move(++renglon, 0);
+            printw("BAD INSTRUCTION\n");
+            refresh();
+            return -1;
+            break;
+        case 5:
+            move(++renglon, 0);
+            printw("Succes\n");
+            break;
+        }
+        mvprintw(++renglon, 0, "%s\n", print);
     }
 }
 int executeTokenizer(char *cadArchivo)
@@ -65,7 +100,7 @@ int executeTokenizer(char *cadArchivo)
         return -1;
     }
     char *print;
-    mvprintw(3, 0, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, lastAX, lastBX, lastCX, lastDX);
+    mvprintw(3, 0, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
     tokenizerPrint(archivo);
     return 0;
 }
@@ -77,7 +112,8 @@ int main(void)
     if (initInterface() == 0)
         printf("An Error Ocurred\n");
     do
-    {
+    {   
+        
         getTextFromTerminal(&entrada);
         instructionInterpreter(entrada, &arguments);
         if (strcmp(arguments[0], "ejecutar") == 0 || strcmp(arguments[0], "Ejecutar") == 0 || strcmp(arguments[0], "x") == 0)
@@ -98,6 +134,7 @@ int main(void)
         // elimina lo que está en la linea cuando comienzas a escribir:
         move(1, 1); // Se mueve el cursor a donde está el promt para borrar esa fila
         clrtoeol(); // limpia la linea
+        
 
     } while (strcmp(arguments[0], "salir") != 0 && strcmp(arguments[0], "q") != 0);
 
