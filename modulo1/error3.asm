@@ -1,0 +1,2 @@
+DEC DX,2
+END
