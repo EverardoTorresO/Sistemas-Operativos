@@ -6,3 +6,4 @@ int initInterface();
 int removeInterface();
 void getTextFromTerminal(char **entrada);
 void instructionInterpreter(char *entrada,char***argumentos);
+int kbhit(void);

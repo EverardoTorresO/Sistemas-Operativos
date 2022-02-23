@@ -68,20 +68,11 @@ NUM executeToken(char **source, char *cad)
         return flag;
     }
 }
-
-/****************************\
-Funcion valida_isntrucciones:
-Trabaja sobre 1 sola linea
-de codigo.
-@param linea de codigo asm
-retorna:
-0 Linea vacia
-1 Registro invalido
-2 Fin del archivo
-3 Div by cero;
-4 Instruccion no valida.
-5 se Realizo la accion.
-/****************************/
+/**
+* @def Funcion doOperation: Trabaja sobre 1 sola linea de codigo.
+* @param instrucciones es una linea de codigo asm
+* @brief retorna: 0 Linea vacia, 1 Registro invalido, 2 Fin del archivo, 3 Div by cero; 4 Instruccion no valida. 5 se Realizo la accion.
+*/
 int doOperation(char **instrucciones)
 {
     int i = 1, retorno = 0;

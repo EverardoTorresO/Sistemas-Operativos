@@ -1,4 +1,8 @@
 
+/**
+ * @brief Se compila gcc interprete.c operaciones.c paso1.c -o paso1.o
+ * 
+ */
 char IR[4];
 #include "default.h"
 #include "operaciones.h"

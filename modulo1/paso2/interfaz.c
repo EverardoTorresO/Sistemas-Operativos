@@ -73,11 +73,33 @@ void getTextFromTerminal(char **str)
         entrada[i] = ch;
         i++;
     } */
-    mvscanw(1,1,"%[^\n]",entrada);
+    mvscanw(1,3,"%[^\n]",entrada);
     // elimina el mensaje de la parte superior:
     move(0, 0);
     clrtoeol();
     mvprintw(6,0,"\n\n\n%s\n",entrada);
     refresh();
     *str=entrada;
+}
+/**
+ * @brief Regrea un 1 si hay un teclaso pendiente por capturar. 0 en caso contrario.
+ * 
+ * @return int 
+ */
+int kbhit(void) 
+{
+    struct timeval tv;
+    fd_set read_fd;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    FD_ZERO(&read_fd);
+    FD_SET(0, &read_fd);
+
+    if (select(1, &read_fd, NULL, NULL, &tv) == -1)
+        return 0;
+
+    if (FD_ISSET(0, &read_fd))
+        return 1;
+
+    return 0;
 }

@@ -11,27 +11,6 @@ void clearLineComand(int y, int x)
     clrtoeol();
 }
 
-/* ---------------------------------------------------------------------------------------------------------------------------------
- Regresa:   1 si hay un teclazo pendiente por capturar
-            0 en caso contrario
-*/
-int kbhit(void)
-{
-    struct timeval tv;
-    fd_set read_fd;
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-    FD_ZERO(&read_fd);
-    FD_SET(0, &read_fd);
-
-    if (select(1, &read_fd, NULL, NULL, &tv) == -1)
-        return 0;
-
-    if (FD_ISSET(0, &read_fd))
-        return 1;
-
-    return 0;
-}
 int tokenizerPrint(FILE *Archivo)
 {
     int FLAG_TOKEN = 0;
@@ -85,6 +64,7 @@ int tokenizerPrint(FILE *Archivo)
         }
         mvprintw(++renglon, 0, "%s\n", print);
     }
+    return 0;
 }
 int executeTokenizer(char *cadArchivo)
 {
@@ -99,7 +79,6 @@ int executeTokenizer(char *cadArchivo)
         refresh();
         return -1;
     }
-    char *print;
     mvprintw(3, 0, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
     tokenizerPrint(archivo);
     return 0;
