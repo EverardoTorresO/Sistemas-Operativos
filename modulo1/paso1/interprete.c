@@ -1,5 +1,6 @@
 #include "interprete.h"
 #include "operaciones.h"
+
 int tokenizer(FILE *Archivo)
 {
     int FLAG_TOKEN = 0;
@@ -21,6 +22,7 @@ int tokenizer(FILE *Archivo)
         switch (FLAG_TOKEN)
         {
             case 0 : printf("Linea Vacia: No Execute\n");
+            return -1;
             break;
         case 1:
             printf("BAD REGISTER\n");
@@ -42,6 +44,7 @@ int tokenizer(FILE *Archivo)
         }
         printf("%s\n", print);
     }
+    return 0;
 }
 int isInstruction()
 {
@@ -67,6 +70,7 @@ NUM executeToken(char **source, char *cad)
         sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
         return flag;
     }
+    return 0;
 }
 /**
 * @def Funcion doOperation: Trabaja sobre 1 sola linea de codigo.
@@ -75,8 +79,7 @@ NUM executeToken(char **source, char *cad)
 */
 int doOperation(char **instrucciones)
 {
-    int i = 1, retorno = 0;
-    char *ptr;
+    int  retorno = 0;
 
     if (strlen(instrucciones[0]) == 0)
     {
@@ -270,15 +273,11 @@ int doOperation(char **instrucciones)
     } /*Fin de la instruccion*/
     return retorno;
 }
-
-/************************\
-Funcion getRegister:
-@param el registro dentro
-de la linea de asm
-retorna:
-el valor del registro si existe
- en otro caso.
-/************************/
+/**
+ * @brief Retorna el valor del registro si existe
+ * @param registro Obtiene el registro dentro de la liena asm
+ * @fn getRegister()
+ */
 int getRegister(char registro[10])
 {
     if (strcmp(registro, " AX") == 0 || strcmp(registro, "AX") == 0)
@@ -302,17 +301,12 @@ int getRegister(char registro[10])
         return 0;
     }
 }
+/**
+ * @brief Obttiene el valor del registro. El valor del registro si se obtiene es  el valor numerico o el de la sentencia
+ * @param valor Ultimo argumento de la linea asm
+ * 
+ */
 
-/************************\
-Funcion getValue:
-@param el último argumento
-de la linea en asm.
-retorna:
-El valor del registro si
-se cita uno.
-o el valor numerico de la
-sentencia.
-/************************/
 int getValue(char valor[10])
 {
     if (strcmp("AX", valor) == 0)

@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS= -g -Wall
+CFLAGS=  -g -Wall
 all: operaciones.o interprete.o interfaz.o modulo1.o
 modulo1.o:
 	$(CC) $(CFLAGS) -o modulo1.out modulo1.c interfaz.o interprete.o operaciones.o -lncurses

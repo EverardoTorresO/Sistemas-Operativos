@@ -4,7 +4,7 @@
 #include <string.h>
 
 extern NUM AX,BX,CX,DX,TMP,PC;
-int tokenizer(FILE *Archivo);
+NUM tokenizer(FILE *Archivo);
 NUM executeToken(char **str,char*cad);
 char*getCopyString( char *str, int a,int b);
 int whoOperation(char*cad);

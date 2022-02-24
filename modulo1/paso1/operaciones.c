@@ -257,19 +257,21 @@ int OPER(int a, int b)
 	a = a / b;
 	return a;
 }
-/*------------------------------------------*/
-/***********************************\
-Funcion INC:
-\***********************************/
+/**
+ * @brief Incremento en 1 al valor
+ * @param a 
+ * @return int
+ */
 int INC(int a)
 {
 	a++;
 	return a;
 }
-/*------------------------------------------*/
-/***********************************\
-Funcion INC:
-\***********************************/
+/**
+ * @brief Decremento en 1 al valor
+ * @param a 
+ * @return int 
+ */
 int DEC(int a)
 {
 	a--;
