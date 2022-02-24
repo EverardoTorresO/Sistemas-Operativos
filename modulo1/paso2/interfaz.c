@@ -89,7 +89,6 @@ int tokenizerPrint(FILE *Archivo)
     {
         int len = strlen(str);
         // Verificamos si el último caracter es un salto de línea
-        sleep(DELAY_TIMER);
         if (str[len - 1] == '\n')
             // Eliminamos el salto de línea
             str[len - 1] = '\0';
@@ -127,6 +126,8 @@ int tokenizerPrint(FILE *Archivo)
             printw("Succes\n");
             break;
         }
+	napms(DELAY_TIMER);
+	sleep(DELAY_TIMER);
         mvprintw(++renglon, 0, "%s\n", print);
     }
     return 0;

@@ -4,6 +4,7 @@
 #include "operaciones.h"
 #include "default.h"
 #include <unistd.h>
+#include <termios.h>
 NUM AX, BX, CX, DX, TMP, PC;
 char IR[4];
 void resetVar()
@@ -44,30 +45,29 @@ int main(void)
     {
         memset(entrada, '\0', 50); // inicializa a caracter nulo el comando y argumento
         refresh();
-        if (kbhit() == 1 || beginProgram == 1 || endflag == 1)
+        if (kbhit() == 1 )
         {
             getTextFromTerminal(&entrada);
-            beginProgram = 0;
-        }
-        instructionInterpreter(entrada, &arguments);
-        if (strcmp(arguments[0], "ejecutar") == 0 || strcmp(arguments[0], "Ejecutar") == 0 || strcmp(arguments[0], "x") == 0)
-        {
-            // Mandar llamar una función que lea el archivo indicado e inicie el interprete
-            mvprintw(0, 0, "Realizando acción EJECUTAR");
-            
-            executeTokenizer(arguments[1]);
-            endflag = 1;
-            resetVar();
-        }
-        else if (strcmp(arguments[0], "matar") == 0 || strcmp(arguments[0], "Matar") == 0 || strcmp(arguments[0], "k") == 0)
-        {
-            mvprintw(0, 0, "Realizando acción MATAR");
-        }
-        else if (strcmp(arguments[0], "salir") != 0 && strcmp(arguments[0], "q") != 0)
-            break;
-        else
-        {
-            mvprintw(0, 0, "Comando desconocido");
+
+            instructionInterpreter(entrada, &arguments);
+            if (strcmp(arguments[0], "ejecutar") == 0 || strcmp(arguments[0], "Ejecutar") == 0 || strcmp(arguments[0], "x") == 0)
+            {
+                // Mandar llamar una función que lea el archivo indicado e inicie el interprete
+                mvprintw(0, 0, "Realizando acción EJECUTAR");
+
+                executeTokenizer(arguments[1]);
+                resetVar();
+            }
+            else if (strcmp(arguments[0], "matar") == 0 || strcmp(arguments[0], "Matar") == 0 || strcmp(arguments[0], "k") == 0)
+            {
+                mvprintw(0, 0, "Realizando acción MATAR");
+            }
+            else if (strcmp(arguments[0], "salir") != 0 && strcmp(arguments[0], "q") != 0)
+                break;
+            else
+            {
+                mvprintw(0, 0, "Comando desconocido");
+            }
         }
 
         // elimina lo que está en la linea cuando comienzas a escribir:
