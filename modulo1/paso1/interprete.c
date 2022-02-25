@@ -19,6 +19,8 @@ int tokenizer(FILE *Archivo)
             str[len - 1] = '\0';
        
         FLAG_TOKEN = executeToken(&print, str);
+        printf("%s\n", print);
+        
         switch (FLAG_TOKEN)
         {
             case 0 : printf("Linea Vacia: No Execute\n");
@@ -42,31 +44,31 @@ int tokenizer(FILE *Archivo)
             printf("Succes\n");
             break;
         }
-        printf("%s\n", print);
+        
     }
     return 0;
-}
-int isInstruction()
-{
-
-    return 1;
 }
 NUM executeToken(char **source, char *cad)
 {
     char **args;
     int operation = 0;
     
-    int argc = getArguments(cad, " ,\n", &args, &operation);
+    int argc = getArguments(cad, &args, &operation);
     
     int flag = doOperation(args);
     if (flag && argc>0)
+    {   if (flag==5)
     {
+         PC++;
+    }
+    
+       
         sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
         return flag;
     }
     else if( argc>0)
     {
-
+        PC++;
         sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
         return flag;
     }
@@ -81,7 +83,7 @@ int doOperation(char **instrucciones)
 {
     int  retorno = 0;
 
-    if (strlen(instrucciones[0]) == 0)
+    if (strlen(instrucciones[0]) == 0 || strcmp("\n", instrucciones[0]) == 0)
     {
         retorno = 0;
     }
@@ -89,7 +91,6 @@ int doOperation(char **instrucciones)
     {
         if (strcmp("MOV", instrucciones[0]) == 0)
         {
-            PC++;
             strcpy(IR, "MOV");
             retorno = 5;
             switch (getRegister(instrucciones[1]))
@@ -113,7 +114,6 @@ int doOperation(char **instrucciones)
         }
         else if (strcmp("ADD", instrucciones[0]) == 0)
         {
-            PC++;
             strcpy(IR, "ADD");
             retorno = 5;
             switch (getRegister(instrucciones[1]))
@@ -137,7 +137,6 @@ int doOperation(char **instrucciones)
         }
         else if (strcmp("SUB", instrucciones[0]) == 0)
         {
-            PC++;
             strcpy(IR, "SUB");
             retorno = 5;
             switch (getRegister(instrucciones[1]))
@@ -161,7 +160,6 @@ int doOperation(char **instrucciones)
         }
         else if (strcmp("MUL", instrucciones[0]) == 0)
         {
-            PC++;
             strcpy(IR, "MUL");
             retorno = 5;
             switch (getRegister(instrucciones[1]))
@@ -185,7 +183,6 @@ int doOperation(char **instrucciones)
         }
         else if (strcmp("DIV", instrucciones[0]) == 0)
         {
-            PC++;
             strcpy(IR, "DIV");
             retorno = 5;
             if (getValue(instrucciones[2]) == 0)
@@ -216,7 +213,6 @@ int doOperation(char **instrucciones)
         }
         else if (strcmp("INC", instrucciones[0]) == 0)
         {
-            PC++;
             strcpy(IR, "INC");
             retorno = 5;
             switch (getRegister(instrucciones[1]))
@@ -240,7 +236,6 @@ int doOperation(char **instrucciones)
         }
         else if (strcmp("DEC", instrucciones[0]) == 0)
         {
-            PC++;
             strcpy(IR, "DEC");
             retorno = 5;
             switch (getRegister(instrucciones[1]))

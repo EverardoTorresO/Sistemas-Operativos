@@ -14,9 +14,9 @@ int OPER(int a, int b);
 int MUL(int a, int b);
 int INC(int a);
 int DEC(int a);
- void freeMemoryArgs(char***args);
+void freeMemoryArgs(char***args);
 
-int getArguments(const char *orig, char *delim, char ***argue,int*operation);
+int getArguments(const char *orig, char ***argue,int*operation);
 NUM whoToken(char *argv);
 
 

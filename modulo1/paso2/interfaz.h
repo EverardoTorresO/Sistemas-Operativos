@@ -9,7 +9,7 @@ extern char IR[4];
 int initInterface();
 int removeInterface();
 void getTextFromTerminal(char **entrada);
-void instructionInterpreter(char *entrada, char ***argumentos);
+int instructionInterpreter(char *entrada, char ***argumentos);
 void clearLineComandToDown(int y, int x);
 int tokenizerPrint(FILE *Archivo);
 int executeTokenizer(char *cadArchivo);

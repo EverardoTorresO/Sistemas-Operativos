@@ -37,19 +37,20 @@ int main(void)
 {
     char *entrada = malloc(sizeof(char) * MAX_TERMINAL_STRING);
     char **arguments;
-    int beginProgram = 1, endflag = 0;
 
     if (initInterface() == 0)
         printf("An Error Ocurred\n");
     while (1)
     {
         memset(entrada, '\0', 50); // inicializa a caracter nulo el comando y argumento
-        refresh();
-        if (kbhit() == 1 )
+        if (kbhit() == 1 || 1)
         {
             getTextFromTerminal(&entrada);
-
-            instructionInterpreter(entrada, &arguments);
+            
+            if (instructionInterpreter(entrada, &arguments)){
+                mvprintw(3, 0, "La expresion %s no se pudo leer.", entrada);
+                refresh();
+                sleep(3);}
             if (strcmp(arguments[0], "ejecutar") == 0 || strcmp(arguments[0], "Ejecutar") == 0 || strcmp(arguments[0], "x") == 0)
             {
                 // Mandar llamar una función que lea el archivo indicado e inicie el interprete
@@ -62,12 +63,20 @@ int main(void)
             {
                 mvprintw(0, 0, "Realizando acción MATAR");
             }
-            else if (strcmp(arguments[0], "salir") != 0 && strcmp(arguments[0], "q") != 0)
+            else if (strcmp(arguments[0], "salir") == 0 || strcmp(arguments[0], "q") == 0)
                 break;
             else
             {
                 mvprintw(0, 0, "Comando desconocido");
             }
+        }
+        else
+        {
+            move(1, 0);
+            attron(COLOR_PAIR(1));
+            printw("$: ");
+            attroff(COLOR_PAIR(1));
+            refresh();
         }
 
         // elimina lo que está en la linea cuando comienzas a escribir:

@@ -17,35 +17,41 @@ int removeInterface()
     endwin();
     return 0;
 }
-void instructionInterpreter(char *entrada, char ***argumentos)
+int instructionInterpreter(char *entrada, char ***argumentos)
 {
-    char **args = malloc(sizeof(char) * MAX_TERMINAL_STRING);
-    move(5, 5);
+    char **args = NULL;
     char *orig = malloc(strlen(entrada) + 1);
     strcpy(orig, entrada);
-    clrtoeol();
     int i = 0;
     char *token = strtok(orig, " ");
-    strcpy(args[i], token);
+    if (token == NULL)
+    {
+        return -1;
+    }
+    args[i] = token;
     // loop through the string to extract all other tokens
     while (token != NULL)
     {
         token = strtok(NULL, " ");
-        strcpy(args[++i], token);
+        mvprintw(2, 0, "%s", args[i]);
+        refresh();
+        sleep(3);
+        args[++i] = token;
     }
-    if (i < MAX_ARGS - 1)
+   /*  if (i < MAX_ARGS - 1)
     {
         for (; i < MAX_ARGS; i++)
         {
             // mvprintw(i, 0, "Borrando %d", i);
             refresh();
 
-            strcpy(args[i], "\0");
+            args[i] = "\0";
         }
-        erase();
-    }
+        clearLineComandToDown(2, 0);
+    } */
     refresh();
     *argumentos = args;
+    return 0;
 }
 
 void getTextFromTerminal(char **str)
@@ -72,8 +78,11 @@ void getTextFromTerminal(char **str)
 
 void clearLineComandToDown(int y, int x)
 {
-    move(y, x);
-    clrtobot();
+    for (int i = y; i < getmaxy(stdscr); i++)
+    {
+        move(i, x);
+        clrtoeol();
+    }
 }
 
 int tokenizerPrint(FILE *Archivo)
@@ -126,8 +135,8 @@ int tokenizerPrint(FILE *Archivo)
             printw("Succes\n");
             break;
         }
-	napms(DELAY_TIMER);
-	sleep(DELAY_TIMER);
+        napms(DELAY_TIMER);
+        sleep(DELAY_TIMER);
         mvprintw(++renglon, 0, "%s\n", print);
     }
     return 0;

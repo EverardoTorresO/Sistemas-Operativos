@@ -8,7 +8,6 @@ char IR[4];
 #include "operaciones.h"
 #include "interprete.h"
 NUM AX, BX, CX, DX, TMP, PC;
-
 int main(int argc, char *argv[])
 {
     for (int i = 1; i < argc; i++)

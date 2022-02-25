@@ -39,7 +39,7 @@ int getArgumentsFrom(char *orig, char *delim, char *args[], int max_args)
 
     return num;
 }
-int getArguments(const char *orig, char *delim, char ***argue,int *operation)
+int getArguments(const char *orig, char ***argue,int *operation)
 {
     int flag = 0;
     char *tmp;
@@ -96,8 +96,8 @@ int getArguments(const char *orig, char *delim, char ***argue,int *operation)
 
         args[0] = tmp;
         char **argv = (char **)calloc(MAX_ARGS, MAX_CADENA);
-
-        getArgumentsFrom(ret, ",", argv, MAX_ARGS);
+        getArgumentsFrom(ret, ",", argv, MAX_ARGS);       
+    
         args[1] = argv[0];
         args[2] = argv[1];
         flag = 3;
