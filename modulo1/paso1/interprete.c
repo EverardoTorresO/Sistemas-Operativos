@@ -76,7 +76,13 @@ NUM executeToken(char **source, char *cad)
         PC++;
         sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
         return flag;
+    }   else if (argc == 0)
+    {
+
+        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+        return argc;
     }
+    return flag;
 }
 /**
  * @def Funcion doOperation: Trabaja sobre 1 sola linea de codigo.
@@ -87,7 +93,7 @@ int doOperation(char **instrucciones)
 {
     int retorno = 0;
 
-    if (strlen(instrucciones[0]) == 0 || strcmp("\n", instrucciones[0]) == 0)
+    if (strlen(instrucciones[0]) == 0 || strcmp("\0", instrucciones[0]) == 0||  strcmp("\n", instrucciones[0]) == 0 ||strcmp("", instrucciones[0]) == 0)
     {
         retorno = 0;
     }
