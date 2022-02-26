@@ -165,8 +165,10 @@ int getArguments(const char *orig, char ***argue, int *operation)
         args = calloc(2, 4);
         args[0] = tmp;
         char **argv = malloc(1 * MAX_CADENA);
-        if (2 >= getArgumentsFrom(ret, ",", argv, MAX_ARGS))
+        int argu=getArgumentsFrom(ret, ",", argv, 1);
+        if (1 <argu)
         {
+            printf("Error en los ARG\t\t\t\t<sdas\n");
             flag = -1;
         }
         else
@@ -181,8 +183,10 @@ int getArguments(const char *orig, char ***argue, int *operation)
         args = calloc(2, 4);
         args[0] = tmp;
         char **argv = malloc(1 * MAX_CADENA);
-        if (2 >= getArgumentsFrom(ret, ",", argv, MAX_ARGS))
+        int argu=getArgumentsFrom(ret, ",", argv, 1);
+    if (1< argu)
         {
+            printf("Error en los ARG\t\t\t\t<sdas\n");
             flag = -1;
         }
         else
@@ -227,10 +231,10 @@ NUM whoToken(char *argv)
 
 /**
  * @brief Asigna "A" a "B".
- * 
+ *
  * @param A Parametro a asignar
  * @param B Valor a asignar
- * @return int 
+ * @return int
  */
 int MOV(int A, int B)
 {
@@ -239,10 +243,10 @@ int MOV(int A, int B)
 }
 /**
  * @brief Añade a "A" el valor de "B"
- * 
- * @param A 
- * @param B 
- * @return int 
+ *
+ * @param A
+ * @param B
+ * @return int
  */
 
 int ADD(int A, int B)

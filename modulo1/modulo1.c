@@ -54,12 +54,10 @@ int main(void)
     while (1)
     {
         memset(entrada, '\0', 50); // inicializa a caracter nulo el comando y argumento
-        if (kbhit() == 1)
+        if (kbhit() == 1 || 1)
         {
 
             getTextFromTerminal(&entrada);
-
-            sleep(DELAY_TIMER);
             if (strlen(entrada) <=1)
             {
                  mvprintw(0, 0, "Cadena Vacia");
