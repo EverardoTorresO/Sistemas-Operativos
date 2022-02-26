@@ -5,7 +5,7 @@ int tokenizer(FILE *Archivo)
 {
     int FLAG_TOKEN = 0;
     char *print = malloc(100);
-    
+
     sprintf(print, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
     printf("%s\n", print);
     char str[30];
@@ -13,17 +13,18 @@ int tokenizer(FILE *Archivo)
     {
         int len = strlen(str);
         // Verificamos si el último caracter es un salto de línea
-        
+
         if (str[len - 1] == '\n')
             // Eliminamos el salto de línea
             str[len - 1] = '\0';
-       
+
         FLAG_TOKEN = executeToken(&print, str);
         printf("%s\n", print);
-        
+
         switch (FLAG_TOKEN)
         {
-            case 0 : printf("Linea Vacia: No Execute\n");
+        case 0:
+            printf("Linea Vacia: No Execute\n");
             return -1;
             break;
         case 1:
@@ -44,7 +45,6 @@ int tokenizer(FILE *Archivo)
             printf("Succes\n");
             break;
         }
-        
     }
     return 0;
 }
@@ -52,40 +52,40 @@ NUM executeToken(char **source, char *cad)
 {
     char **args;
     int operation = 0;
-    
+
     int argc = getArguments(cad, &args, &operation);
-    
-    int flag = doOperation(args);
-    if (flag && argc>0)
-    {   if (flag==5)
+    if (argc == -1)
     {
-         PC++;
+        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+        return 1;
+        
     }
-    
-       
+    int flag = doOperation(args);
+    if (flag && argc > 0)
+    {
+        if (flag == 5)
+        {
+            PC++;
+        }
+
         sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
         return flag;
     }
-    else if( argc>0)
+    else if (argc > 0)
     {
         PC++;
         sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
         return flag;
-    }else if(argc==-1){
-
-        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
-        return 1;
     }
-    return 0;
 }
 /**
-* @def Funcion doOperation: Trabaja sobre 1 sola linea de codigo.
-* @param instrucciones es una linea de codigo asm
-* @brief retorna: 0 Linea vacia, 1 Registro invalido, 2 Fin del archivo, 3 Div by cero; 4 Instruccion no valida. 5 se Realizo la accion.
-*/
+ * @def Funcion doOperation: Trabaja sobre 1 sola linea de codigo.
+ * @param instrucciones es una linea de codigo asm
+ * @brief retorna: 0 Linea vacia, 1 Registro invalido, 2 Fin del archivo, 3 Div by cero; 4 Instruccion no valida. 5 se Realizo la accion.
+ */
 int doOperation(char **instrucciones)
 {
-    int  retorno = 0;
+    int retorno = 0;
 
     if (strlen(instrucciones[0]) == 0 || strcmp("\n", instrucciones[0]) == 0)
     {
@@ -303,7 +303,7 @@ int getRegister(char registro[10])
 /**
  * @brief Obttiene el valor del registro. El valor del registro si se obtiene es  el valor numerico o el de la sentencia
  * @param valor Ultimo argumento de la linea asm
- * 
+ *
  */
 
 int getValue(char valor[10])
