@@ -16,7 +16,7 @@ int getValue(char valor[10]);
 extern int MOV(int a, int b);
 extern int ADD(int a, int b);
 extern int SUB(int a, int b);
-extern int OPER(int a, int b);
+extern int DIV(int a, int b);
 extern int MUL(int a, int b);
 extern int INC(int a);
 extern int DEC(int a);

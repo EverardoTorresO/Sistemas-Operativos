@@ -22,7 +22,7 @@ int instructionInterpreter(char *entrada, char ***argumentos)
     char **args = NULL;
     char *orig = malloc(strlen(entrada) + 1);
     strcpy(orig, entrada);
-    printf("%s",entrada);
+    printf("%s", entrada);
     int i = 0;
     char *token = strtok(orig, " ");
     if (token == NULL)
@@ -95,7 +95,8 @@ int tokenizerPrint(FILE *Archivo)
         switch (FLAG_TOKEN)
         {
         case 0:
-            printf("Linea Vacia: No Execute\n");
+            move(++renglon, 0);
+            printw("Linea Vacia: No Execute\n");
             return -1;
             break;
         case 1:
@@ -125,7 +126,6 @@ int tokenizerPrint(FILE *Archivo)
             printw("Succes\n");
             break;
         }
-        
     }
     return 0;
 }
@@ -143,6 +143,7 @@ int executeTokenizer(char *cadArchivo)
         return -1;
     }
     mvprintw(3, 0, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
-    
-    return tokenizerPrint(archivo);;
+
+    return tokenizerPrint(archivo);
+    ;
 }

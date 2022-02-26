@@ -71,6 +71,10 @@ NUM executeToken(char **source, char *cad)
         PC++;
         sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
         return flag;
+    }else if(argc==-1){
+
+        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+        return 1;
     }
     return 0;
 }
@@ -194,16 +198,16 @@ int doOperation(char **instrucciones)
                 switch (getRegister(instrucciones[1]))
                 {
                 case 1:
-                    AX = OPER(AX, getValue(instrucciones[2]));
+                    AX = DIV(AX, getValue(instrucciones[2]));
                     break;
                 case 2:
-                    BX = OPER(BX, getValue(instrucciones[2]));
+                    BX = DIV(BX, getValue(instrucciones[2]));
                     break;
                 case 3:
-                    CX = OPER(CX, getValue(instrucciones[2]));
+                    CX = DIV(CX, getValue(instrucciones[2]));
                     break;
                 case 4:
-                    DX = OPER(DX, getValue(instrucciones[2]));
+                    DX = DIV(DX, getValue(instrucciones[2]));
                     break;
                 case 0:
                     retorno = 1;

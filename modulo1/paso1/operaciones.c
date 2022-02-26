@@ -39,7 +39,7 @@ int getArgumentsFrom(char *orig, char *delim, char *args[], int max_args)
 
     return num;
 }
-int getArguments(const char *orig, char ***argue,int *operation)
+int getArguments(const char *orig, char ***argue, int *operation)
 {
     int flag = 0;
     char *tmp;
@@ -52,10 +52,11 @@ int getArguments(const char *orig, char ***argue,int *operation)
 
     /* Extraemos la primera palabra */
     tmp = strtok(str, " ");
-    if(tmp==NULL){
+    if (tmp == NULL)
+    {
         return flag;
     }
-    //printf("tmp: %s\n", tmp);
+    // printf("tmp: %s\n", tmp);
     if (0 == strcmp(tmp, "END\n") || 0 == strcmp(tmp, "END"))
     {
         args = calloc(1, 5);
@@ -96,12 +97,12 @@ int getArguments(const char *orig, char ***argue,int *operation)
 
         args[0] = tmp;
         char **argv = (char **)calloc(MAX_ARGS, MAX_CADENA);
-        getArgumentsFrom(ret, ",", argv, MAX_ARGS);       
-    
+        getArgumentsFrom(ret, ",", argv, MAX_ARGS);
+
         args[1] = argv[0];
         args[2] = argv[1];
         flag = 3;
-        *operation=-1;
+        *operation = -1;
     }
     else if (0 == strcmp(tmp, "ADD"))
     {
@@ -115,7 +116,7 @@ int getArguments(const char *orig, char ***argue,int *operation)
         args[1] = argv[0];
         args[2] = argv[1];
         flag = 3;
-        *operation=-2;
+        *operation = -2;
     }
     else if (0 == strcmp(tmp, "SUB"))
     {
@@ -129,7 +130,7 @@ int getArguments(const char *orig, char ***argue,int *operation)
         args[1] = argv[0];
         args[2] = argv[1];
         flag = 3;
-        *operation=-3;
+        *operation = -3;
     }
     else if (0 == strcmp(tmp, "MUL"))
     {
@@ -143,7 +144,7 @@ int getArguments(const char *orig, char ***argue,int *operation)
         args[1] = argv[0];
         args[2] = argv[1];
         flag = 3;
-        *operation=-4;
+        *operation = -4;
     }
     else if (0 == strcmp(tmp, "DIV"))
     {
@@ -157,25 +158,38 @@ int getArguments(const char *orig, char ***argue,int *operation)
         args[1] = argv[0];
         args[2] = argv[1];
         flag = 3;
-        *operation=-5;
+        *operation = -5;
     }
     else if (0 == strcmp(tmp, "INC"))
     {
         args = calloc(2, 4);
         args[0] = tmp;
         char **argv = malloc(1 * MAX_CADENA);
-        getArgumentsFrom(ret, ",", argv, MAX_ARGS);
+        if (2 >= getArgumentsFrom(ret, ",", argv, MAX_ARGS))
+        {
+            flag = -1;
+        }
+        else
+        {
+
+            flag = 2;
+        }
         args[1] = argv[0];
-        flag = 2;
     }
     else if (0 == strcmp(tmp, "DEC"))
     {
         args = calloc(2, 4);
         args[0] = tmp;
         char **argv = malloc(1 * MAX_CADENA);
-        getArgumentsFrom(ret, ",", argv, MAX_ARGS);
+        if (2 >= getArgumentsFrom(ret, ",", argv, MAX_ARGS))
+        {
+            flag = -1;
+        }
+        else
+        {
+            flag = 2;
+        }
         args[1] = argv[0];
-        flag = 2;
     }
 
     else
@@ -205,28 +219,36 @@ NUM whoToken(char *argv)
         return 5;
     else if (strcmp(argv, "TMP"))
         return 6;
-    else{
+    else
+    {
         return 0;
     }
 }
 
-/***********************************\
-Funcion MOV:
-\***********************************/
-int MOV(int a, int b)
+/**
+ * @brief Asigna "A" a "B".
+ * 
+ * @param A Parametro a asignar
+ * @param B Valor a asignar
+ * @return int 
+ */
+int MOV(int A, int B)
 {
-	a = b;
-	return a;
+    A = B;
+    return A;
 }
-/*------------------------------------------*/
-/***********************************\
-Funcion ADD:
-\***********************************/
+/**
+ * @brief Añade a "A" el valor de "B"
+ * 
+ * @param A 
+ * @param B 
+ * @return int 
+ */
 
-int ADD(int a, int b)
+int ADD(int A, int B)
 {
-	a += b;
-	return a;
+    A += B;
+    return A;
 }
 /*------------------------------------------*/
 /***********************************\
@@ -235,8 +257,8 @@ Funcion SUB:
 
 int SUB(int a, int b)
 {
-	a -= b;
-	return a;
+    a -= b;
+    return a;
 }
 /*------------------------------------------*/
 /***********************************\
@@ -244,36 +266,36 @@ Funcion MUL:
 \***********************************/
 int MUL(int a, int b)
 {
-	a *= b;
-	return a;
+    a *= b;
+    return a;
 }
 /*------------------------------------------*/
 /***********************************\
 Funcion OPER: (division)
-	Divide
+    Divide
 \***********************************/
-int OPER(int a, int b)
+int DIV(int a, int b)
 {
-	a = a / b;
-	return a;
+    a = a / b;
+    return a;
 }
 /**
  * @brief Incremento en 1 al valor
- * @param a 
+ * @param a
  * @return int
  */
 int INC(int a)
 {
-	a++;
-	return a;
+    a++;
+    return a;
 }
 /**
  * @brief Decremento en 1 al valor
- * @param a 
- * @return int 
+ * @param a
+ * @return int
  */
 int DEC(int a)
 {
-	a--;
-	return a;
+    a--;
+    return a;
 }

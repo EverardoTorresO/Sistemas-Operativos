@@ -10,7 +10,7 @@ extern char IR[4];
 int MOV(int a, int b);
 int ADD(int a, int b);
 int SUB(int a, int b);
-int OPER(int a, int b);
+int DIV(int a, int b);
 int MUL(int a, int b);
 int INC(int a);
 int DEC(int a);
@@ -22,7 +22,6 @@ NUM whoToken(char *argv);
 
 /**
  ******************************************************************
- * \fn int getArgumentsFrom(char *orig, char *delim, char args[][MAX_CADENA], int max_args);
  * \brief Extrae palabras de una cadena y las coloca en un array
  *
  * \param orig     Cadena inicial
