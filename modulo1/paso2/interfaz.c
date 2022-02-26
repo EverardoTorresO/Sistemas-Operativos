@@ -22,6 +22,7 @@ int instructionInterpreter(char *entrada, char ***argumentos)
     char **args = NULL;
     char *orig = malloc(strlen(entrada) + 1);
     strcpy(orig, entrada);
+    printf("%s",entrada);
     int i = 0;
     char *token = strtok(orig, " ");
     if (token == NULL)
@@ -35,20 +36,8 @@ int instructionInterpreter(char *entrada, char ***argumentos)
         token = strtok(NULL, " ");
         mvprintw(2, 0, "%s", args[i]);
         refresh();
-        sleep(3);
         args[++i] = token;
     }
-   /*  if (i < MAX_ARGS - 1)
-    {
-        for (; i < MAX_ARGS; i++)
-        {
-            // mvprintw(i, 0, "Borrando %d", i);
-            refresh();
-
-            args[i] = "\0";
-        }
-        clearLineComandToDown(2, 0);
-    } */
     refresh();
     *argumentos = args;
     return 0;
@@ -56,7 +45,6 @@ int instructionInterpreter(char *entrada, char ***argumentos)
 
 void getTextFromTerminal(char **str)
 {
-    nocbreak();
     char *entrada = malloc(sizeof(char) * MAX_TERMINAL_STRING);
     move(1, 0);
     attron(COLOR_PAIR(1));
@@ -89,7 +77,6 @@ int tokenizerPrint(FILE *Archivo)
 {
     int FLAG_TOKEN = 0;
     char *print = malloc(100);
-    sleep(DELAY_TIMER);
     sprintf(print, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
     mvprintw(2, 0, "%s\n", print);
     char str[30];
@@ -103,10 +90,13 @@ int tokenizerPrint(FILE *Archivo)
             str[len - 1] = '\0';
 
         FLAG_TOKEN = executeToken(&print, str);
+        fflush(stdout);
+        mvprintw(++renglon, 0, "%s\n", print);
         switch (FLAG_TOKEN)
         {
         case 0:
             printf("Linea Vacia: No Execute\n");
+            return -1;
             break;
         case 1:
             move(++renglon, 0);
@@ -135,9 +125,7 @@ int tokenizerPrint(FILE *Archivo)
             printw("Succes\n");
             break;
         }
-        napms(DELAY_TIMER);
-        sleep(DELAY_TIMER);
-        mvprintw(++renglon, 0, "%s\n", print);
+        
     }
     return 0;
 }
@@ -155,6 +143,6 @@ int executeTokenizer(char *cadArchivo)
         return -1;
     }
     mvprintw(3, 0, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
-    tokenizerPrint(archivo);
-    return 0;
+    
+    return tokenizerPrint(archivo);;
 }
