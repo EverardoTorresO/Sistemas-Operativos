@@ -117,8 +117,28 @@ PCB *extractFirstPCB(PCB **ptrHead){
             // printf("\nImprimiendo Queu: %d\n%s\n", ptr->id, ptr->archivoNombre);
             ptrAux = ptr;
             ptr = ptrAux->next;
+            *ptrHead=ptrAux->next;
             return ptrAux;
        
     }
      return NULL;
+}
+int freeMemoryListPCB(PCB **ptrHead)
+{
+    PCB *ptrAux = NULL, *ptr = *ptrHead;
+    if (ptr == NULL)
+    {
+        return 0;
+    }
+    else
+    {
+        do
+        {
+            // printf("\nImprimiendo Queu: %d\n%s\n", ptr->id, ptr->archivoNombre);
+            ptrAux = ptr;
+            ptr = ptrAux->next;
+            deletePCB(&ptrAux);
+        } while ( ptr != NULL);
+    }
+    return 0;
 }

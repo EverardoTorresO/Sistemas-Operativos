@@ -15,6 +15,7 @@ typedef struct PCB
     int CX;
     int DX;
     char status[50];
+    
     struct PCB *next;
 } PCB;
 
@@ -25,4 +26,5 @@ PCB* findPCB(unsigned int id, PCB **ptrHead);
 PCB *extractPCB(unsigned int id,PCB **ptrTo);
 void printPtrPCB(PCB *ptrToInsert);
 PCB *extractFirstPCB(PCB **ptrTo);
+int freeMemoryListPCB(PCB **ptrHead);
 #endif

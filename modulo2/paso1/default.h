@@ -9,10 +9,18 @@
 #define MAX_TERMINAL_STRING 100
 #define COMAND_STRING "MOVADDSUBMULDIVINCDEC"
 #define DELAY_TIMER 1
+#define SECOND 1000000
+#define MILISECOND 1000
 #ifdef _WIN32
 #include <Windows.h>
 #else
 #include <unistd.h>
 #endif  
-enum errors{__SEGMENT_FAULT=1,_COMMAND_ERROR,_INVALID_ARGUMENTS};
+enum ERORRS{__SEGMENT_FAULT=1,_COMMAND_ERROR,_INVALID_ARGUMENTS};
+typedef enum STATUS_PCB{
+    END=-2,
+    ERROR=-1,
+    READY=0,
+    RUNNING=1
+} STATUS_PCB;
 #endif
