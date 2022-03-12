@@ -1,0 +1,2 @@
+MOV RX,5
+END

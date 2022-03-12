@@ -1,0 +1,92 @@
+  if (argc)
+    {
+        if (argc == 1)
+        {
+            if (!strcmp(args[0], "END"))
+            {
+                sprintf(*source, "IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+                // printf("IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+                return 0;
+            }
+            else
+            {
+                +sprintf(*source, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+                // printf("IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+                return 0;
+            }
+        }
+        else if (argc == 2)
+        {
+            if (!strcmp(args[0], "INC"))
+            {
+                int argv = whoToken(args[1]);
+                switch (argv)
+                {
+                case 1:
+                    AX++;
+                    break;
+                case 2:
+                    BX++;
+                    break;
+                case 3:
+                    CX++;
+                    break;
+                case 4:
+                    CX++;
+                    break;
+                case 5:
+                    DX++;
+                    break;
+                case 6:
+                    TMP++;
+                    break;
+                default:
+                    break;
+                }
+            }
+            else if (!strcmp(args[0], "DEC"))
+            {
+                int argv = whoToken(args[1]);
+                switch (argv)
+                {
+                case 1:
+                    AX--;
+                    break;
+                case 2:
+                    BX--;
+                    break;
+                case 3:
+                    CX--;
+                    break;
+                case 4:
+                    CX--;
+                    break;
+                case 5:
+                    DX--;
+                    break;
+                case 6:
+                    TMP--;
+                    break;
+                default:
+                    break;
+                }
+            }
+            else
+            {
+                printf("ERROR BAD INSTRUCTION: %s", args[0]);
+            }
+            sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+            // printf("IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+        }
+        else if (argc == 3)
+        {
+            
+            doOperation(args);
+            sprintf(*source, "IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+            // printf("IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+        }
+    }
+    else
+    {
+        printf("La carga de argumentos fallo\n");
+    }

@@ -1,0 +1,13 @@
+{
+    "files.associations": {
+        "interfaz.h": "c",
+        "operaciones.h": "c",
+        "interprete.h": "c",
+        "default.h": "c",
+        "kbhit.h": "c",
+        "stdio.h": "c",
+        "unistd.h": "c",
+        "ncurses.h": "c",
+        "cola.h": "c"
+    }
+}
