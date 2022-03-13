@@ -48,20 +48,22 @@ int main(void)
 {
 
     if (initInterface() == 0)
-        printf("An Error Ocurred\n");
+        printf("An Error Ocurred");
     while (1)
     {
         if (kbhit() == 1)
-        {
+        {   
+            commandLinePointer();
             char *arguments[MAX_ARGS];
-            if(commandLine(arguments))
+            if (commandLine(arguments))
                 break;
         }
         else
         {
             schedulingShortTerm(&ptrReady, &ptrRunning, &ptrExit);
             commandLinePointer();
-            usleep(SECOND/MILISECOND);
+            printSchedule(ptrRunning,ptrReady,ptrExit);
+            usleep(SECOND*DELAY_TIMER);
         }
     }
     freeMemoryListPCB(&ptrReady);

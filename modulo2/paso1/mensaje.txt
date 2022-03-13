@@ -4,14 +4,14 @@
         {
             if (!strcmp(args[0], "END"))
             {
-                sprintf(*source, "IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
-                // printf("IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+                sprintf(*source, "IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
+                // printf("IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
                 return 0;
             }
             else
             {
-                +sprintf(*source, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
-                // printf("IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+                +sprintf(*source, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
+                // printf("IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
                 return 0;
             }
         }
@@ -75,18 +75,18 @@
             {
                 printf("ERROR BAD INSTRUCTION: %s", args[0]);
             }
-            sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
-            // printf("IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+            sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
+            // printf("IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
         }
         else if (argc == 3)
         {
             
             doOperation(args);
-            sprintf(*source, "IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
-            // printf("IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+            sprintf(*source, "IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
+            // printf("IR:%s\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
         }
     }
     else
     {
-        printf("La carga de argumentos fallo\n");
+        printf("La carga de argumentos fallo");
     }

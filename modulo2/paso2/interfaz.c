@@ -5,7 +5,7 @@
 char terminalMessage[MAX_TERMINAL_STRING];
 char warningMessage[MAX_TERMINAL_STRING];
 extern unsigned int CounterPCBID;
-extern PCB *ptrReady;
+extern PCB *ptrReady, *ptrRunning, *ptrExit;
 int commandLine(char **arguments)
 {
     char entrada[100];
@@ -19,8 +19,8 @@ int commandLine(char **arguments)
         int argc = getArgumentsFrom(entrada, " ", arguments);
         if (strcmp(arguments[0], "ejecutar") == 0 || strcmp(arguments[0], "Ejecutar") == 0 || strcmp(arguments[0], "x") == 0)
         {
-            clearLineComandToDown(2, 0);
-            // Mandar llamar una función que lea el archivo indicado e inicie el interprete
+            // clearLineComandToDown(2, 0);
+            //  Mandar llamar una función que lea el archivo indicado e inicie el interprete
             sprintf(terminalMessage, "Realizando acción EJECUTAR");
             mvprintw(0, 0, terminalMessage);
             // executeTokenizer(arguments[1]); //Modulo1.c
@@ -31,7 +31,7 @@ int commandLine(char **arguments)
                 {
                     CounterPCBID++;
                     // Se crea pcb por cada archivo, si existe, y se agregan a la cola Ready
-                    if ((ptrAux = makePCB(CounterPCBID, arguments[i], warningMessage)) != NULL)
+                    if ((ptrAux = makePCB(CounterPCBID, arguments[i])) != NULL)
                     {
                         insertPCB(ptrAux, &ptrReady);
                         move(0, 0);
@@ -40,7 +40,6 @@ int commandLine(char **arguments)
                         printw(terminalMessage);
                         refresh();
                         // Second * Seconds
-                        usleep(1000000 * DELAY_TIMER);
                         move(0, 0);
                         clrtoeol();
                         refresh();
@@ -95,7 +94,9 @@ int initInterface()
     cbreak();
     start_color();
     init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(2, COLOR_BLUE, COLOR_BLACK);
     attrset(A_NORMAL);
+
     return 1;
 }
 int removeInterface()
@@ -158,65 +159,142 @@ void clearLineComandToDown(int y, int x)
     }
 }
 
-int tokenizerPrint(PCB *ptrNow)
+int executeLine(PCB *ptrNow)
 {
     FILE *Archivo = ptrNow->archivo;
     int FLAG_TOKEN = 0;
-    char *print = malloc(100);
     char str[30];
-    int renglon = 3;
     if (fgets(str, sizeof(str), Archivo) != NULL)
     {
         int len = strlen(str);
         // Verificamos si el último caracter es un salto de línea
         if (str[len - 1] == '\n')
-            // Eliminamos el salto de línea
-            str[len - 1] = '\0';
+            str[len - 1] = '\0'; // Eliminamos el salto de línea
 
-        FLAG_TOKEN = executeToken(&print, str);
+        FLAG_TOKEN = executeToken(ptrNow, str);
+        printSchedule(ptrNow, ptrReady, ptrExit);
         fflush(stdout);
-        mvprintw(++renglon, 0, "%s\n", print);
-        free(print);
-        usleep(MILISECOND);
+        refresh();
+        usleep(SECOND);
         switch (FLAG_TOKEN)
         {
+        case INVALID_ARGUMENTS:
+            return INVALID_ARGUMENTS;
+        case ERROR_ARGUMENTS:
+            return ERROR_ARGUMENTS;
         case 0:
-            move(++renglon, 0);
-            printw("Linea Vacia: No Execute\n");
-            return -1;
-            break;
+            return EMPTY_IR;
         case 1:
-            move(++renglon, 0);
-            printw("BAD REGISTER\n");
-            refresh();
-            return -1;
+            return BAD_REGISTER;
         case 2:
-            move(++renglon, 0);
-            printw("END\n");
-            refresh();
-            return 1;
+            return END;
         case 3:
-            move(++renglon, 0);
-            printw("Divide By Cero\n");
-            refresh();
-            return -1;
-            break;
+            return DIVIDE_BY_CERO;
         case 4:
-            move(++renglon, 0);
-            printw("BAD INSTRUCTION\n");
-            refresh();
-            return -1;
-            break;
+            return BAD_INSTRUCTION;
         case 5:
-            move(++renglon, 0);
-            printw("Succes\n");
-            break;
+            return SUCCES;
+        case 6:
+            return ERROR_ARGUMENTS;
         }
     }
-    return 0;
+    return END;
 }
+void printExecution(PCB *ptrRunning)
+{
+    attron(COLOR_PAIR(2));
+    mvprintw(3, 0, "EJECUCION\n");
+    attroff(COLOR_PAIR(2));
+    int x = getmaxx(stdscr);
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+    printw("STATUS \t FileName \t PID \tPC\tIR\t\tAX\tBX\tCX\tDX\n");
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+    if (ptrRunning != NULL)
+        printw("%s\t%s\t\t%d\t%d\t%s\t\t%d\t%d\t%d\t%d\n", ptrRunning->status, ptrRunning->archivoNombre, ptrRunning->id, ptrRunning->PC, ptrRunning->IR, ptrRunning->AX, ptrRunning->BX, ptrRunning->CX, ptrRunning->DX);
+    else
+        printw("");
 
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+}
+void printReady(PCB *ptrReady)
+{
+    attron(COLOR_PAIR(2));
+    printw("\nLISTOS\n");
+    attroff(COLOR_PAIR(2));
+    int x = getmaxx(stdscr);
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+    printw("STATUS \t FileName \t PID \tPC\tIR\t\tAX\tBX\tCX\tDX\n");
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+    PCB *ptrAux = NULL, *ptr = ptrReady;
+    if (ptr != NULL)
+    {
+        do
+        {
+            // printf("Imprimiendo Queu: %d%s", ptr->id, ptr->archivoNombre);
+            ptrAux = ptr;
+            printw("%s\t%s\t\t%d\t%d\t%s\t\t%d\t%d\t%d\t%d\n", ptrAux->status, ptrAux->archivoNombre, ptrAux->id, ptrAux->PC, ptrAux->IR, ptrAux->AX, ptrAux->BX, ptrAux->CX, ptrAux->DX);
+            ptr = ptrAux->next;
 
+        } while (ptr != NULL);
+    }
+    else
+        printw("\n");
+
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+}
+void printExit(PCB *ptrExit)
+{
+    attron(COLOR_PAIR(2));
+    printw("\nTERMINADOS\n");
+    attroff(COLOR_PAIR(2));
+    int x = getmaxx(stdscr);
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+    printw("STATUS \t FileName \t PID \tPC\tIR\t\tAX\tBX\tCX\tDX\n");
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+    PCB *ptrAux = NULL, *ptr = ptrExit;
+    if (ptr != NULL)
+    {
+        do
+        {
+            // printf("Imprimiendo Queu: %d%s", ptr->id, ptr->archivoNombre);
+            ptrAux = ptr;
+            printw("%s\t%s\t\t%d\t%d\t%s\t\t%d\t%d\t%d\t%d\n", ptrAux->status, ptrAux->archivoNombre, ptrAux->id, ptrAux->PC, ptrAux->IR, ptrAux->AX, ptrAux->BX, ptrAux->CX, ptrAux->DX);
+            ptr = ptrAux->next;
+
+        } while (ptr != NULL);
+    }
+    else
+        printw("\n");
+
+    for (int i = 0; i < x; i++)
+    {
+        addch('-');
+    }
+}
 void commandLinePointer(void)
 {
     move(1, 0);
@@ -225,4 +303,12 @@ void commandLinePointer(void)
     printw("$: ");
     attroff(COLOR_PAIR(1));
     refresh();
-}            
+}
+void printSchedule(PCB *ptrRunning, PCB *ptrReady, PCB *ptrExit)
+{
+    fflush(stdout);
+    printExecution(ptrRunning);
+    printReady(ptrReady);
+    printExit(ptrExit);
+    refresh();
+}

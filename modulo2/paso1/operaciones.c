@@ -9,9 +9,9 @@ char *getCopyString(char *str, int a, int b)
     for (int i = a; i <= b; i++)
     {
         instruction[i] = str[i];
-        // printf("copíando caracter: %c\n", str[i]);
+        // printf("copíando caracter: %c", str[i]);
     }
-    // printf("cad:%scopy:%s \t%d %d \n", str, instruction, a, b);
+    // printf("cad:%scopy:%s \t%d %d ", str, instruction, a, b);
     return instruction;
 }
 int getArgumentsFrom(char *orig, char *delim, char *args[])
@@ -52,8 +52,8 @@ int getArguments(const char *orig, char ***argue, int *operation)
     {
         return flag;
     }
-    // printf("tmp: %s\n", tmp);
-    if (0 == strcmp(tmp, "END\n") || 0 == strcmp(tmp, "END"))
+    // printf("tmp: %s", tmp);
+    if (0 == strcmp(tmp, "END") || 0 == strcmp(tmp, "END"))
     {
         args = calloc(1, 5);
         args[0] = tmp;
@@ -84,7 +84,7 @@ int getArguments(const char *orig, char ***argue, int *operation)
     {
 
         ret = getCopyString(restante, 0, sizeof(restante));
-    } // printf("retenida :%s%d\t%s\n", tmp,strcmp(tmp,"MOV"),orig);
+    } // printf("retenida :%s%d\t%s", tmp,strcmp(tmp,"MOV"),orig);
 
     if (0 == strcmp(tmp, "MOV"))
     {
@@ -93,11 +93,11 @@ int getArguments(const char *orig, char ***argue, int *operation)
 
         args[0] = tmp;
         char **argv = (char **)calloc(MAX_ARGS, MAX_CADENA);
-        getArgumentsFrom(ret, ",", argv);
-
+        flag = getArgumentsFrom(ret, ",", argv);
         args[1] = argv[0];
+        flag++;
         args[2] = argv[1];
-        flag = 3;
+
         *operation = -1;
     }
     else if (0 == strcmp(tmp, "ADD"))
@@ -108,10 +108,11 @@ int getArguments(const char *orig, char ***argue, int *operation)
         args[0] = tmp;
         char **argv = (char **)calloc(MAX_ARGS, MAX_CADENA);
 
-        getArgumentsFrom(ret, ",", argv);
+        flag = getArgumentsFrom(ret, ",", argv);
+        flag++;
         args[1] = argv[0];
         args[2] = argv[1];
-        flag = 3;
+
         *operation = -2;
     }
     else if (0 == strcmp(tmp, "SUB"))
@@ -122,10 +123,11 @@ int getArguments(const char *orig, char ***argue, int *operation)
         args[0] = tmp;
         char **argv = (char **)calloc(MAX_ARGS, MAX_CADENA);
 
-        getArgumentsFrom(ret, ",", argv);
+        flag = getArgumentsFrom(ret, ",", argv);
+        flag++;
         args[1] = argv[0];
         args[2] = argv[1];
-        flag = 3;
+
         *operation = -3;
     }
     else if (0 == strcmp(tmp, "MUL"))
@@ -136,10 +138,11 @@ int getArguments(const char *orig, char ***argue, int *operation)
         args[0] = tmp;
         char **argv = (char **)calloc(MAX_ARGS, MAX_CADENA);
 
-        getArgumentsFrom(ret, ",", argv);
+        flag = getArgumentsFrom(ret, ",", argv);
+        flag++;
         args[1] = argv[0];
         args[2] = argv[1];
-        flag = 3;
+
         *operation = -4;
     }
     else if (0 == strcmp(tmp, "DIV"))
@@ -150,10 +153,11 @@ int getArguments(const char *orig, char ***argue, int *operation)
         args[0] = tmp;
         char **argv = (char **)calloc(MAX_ARGS, MAX_CADENA);
 
-        getArgumentsFrom(ret, ",", argv);
+        flag = getArgumentsFrom(ret, ",", argv);
+        flag++;
         args[1] = argv[0];
         args[2] = argv[1];
-        flag = 3;
+
         *operation = -5;
     }
     else if (0 == strcmp(tmp, "INC"))
@@ -164,7 +168,7 @@ int getArguments(const char *orig, char ***argue, int *operation)
         int argu = getArgumentsFrom(ret, ",", argv);
         if (1 < argu)
         {
-            printf("Error en los ARG\t\t\t\t<sdas\n");
+            //printf("Error en los ARG\t\t\t\t<sdas");
             flag = -1;
         }
         else
@@ -182,7 +186,7 @@ int getArguments(const char *orig, char ***argue, int *operation)
         int argu = getArgumentsFrom(ret, ",", argv);
         if (1 < argu)
         {
-            printf("Error en los ARG\t\t\t\t<sdas\n");
+            //printf("Error en los ARG\t\t\t\t<sdas");
             flag = -1;
         }
         else

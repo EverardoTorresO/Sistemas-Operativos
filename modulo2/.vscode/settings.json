@@ -8,6 +8,8 @@
         "stdio.h": "c",
         "unistd.h": "c",
         "ncurses.h": "c",
-        "cola.h": "c"
+        "cola.h": "c",
+        "kernel.h": "c",
+        "string.h": "c"
     }
 }

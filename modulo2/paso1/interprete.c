@@ -1,87 +1,43 @@
 #include "interprete.h"
 #include "operaciones.h"
 
-int tokenizer(FILE *Archivo)
-{
-    int FLAG_TOKEN = 0;
-    char *print = malloc(100);
-
-    sprintf(print, "IR:%s\t\tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", "    ", PC, AX, BX, CX, DX);
-    printf("%s\n", print);
-    char str[30];
-    while (fgets(str, sizeof(str), Archivo) != NULL)
-    {
-        int len = strlen(str);
-        // Verificamos si el último caracter es un salto de línea
-
-        if (str[len - 1] == '\n')
-            // Eliminamos el salto de línea
-            str[len - 1] = '\0';
-
-        FLAG_TOKEN = executeToken(&print, str);
-        printf("%s\n", print);
-
-        switch (FLAG_TOKEN)
-        {
-        case 0:
-            printf("Linea Vacia: No Execute\n");
-            return -1;
-            break;
-        case 1:
-            printf("BAD REGISTER\n");
-            return -1;
-        case 2:
-            printf("END\n");
-            return -2;
-        case 3:
-            printf("Divide By Cero\n");
-            return -2;
-            break;
-        case 4:
-            printf("BAD INSTRUCTION\n");
-            return -1;
-            break;
-        case 5:
-            printf("Succes\n");
-            break;
-        }
-    }
-    return 0;
-}
-NUM executeToken(char **source, char *cad)
+NUM executeToken(PCB *ptrNow, char *cad)
 {
     char **args;
     int operation = 0;
-
+    strcpy(ptrNow->IR, cad);
     int argc = getArguments(cad, &args, &operation);
     if (argc == -1)
     {
-        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
-        return 1;
-        
+        return ERROR_ARGUMENTS;
     }
+    else if (argc == 0)
+    {
+        return ERROR_ARGUMENTS;
+    }
+    printSchedule(ptrNow, ptrReady, ptrExit);
     int flag = doOperation(args);
+    printSchedule(ptrNow, ptrReady, ptrExit);
+    saveContext(ptrNow);
     if (flag && argc > 0)
     {
         if (flag == 5)
         {
             PC++;
+            printSchedule(ptrNow, ptrReady, ptrExit);
         }
-
-        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+        // sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
+        printSchedule(ptrNow, ptrReady, ptrExit);
         return flag;
     }
     else if (argc > 0)
     {
         PC++;
-        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
+        // sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
+        printSchedule(ptrNow, ptrReady, ptrExit);
         return flag;
-    }   else if (argc == 0)
-    {
-
-        sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d\n", cad, PC, AX, BX, CX, DX);
-        return argc;
     }
+    printSchedule(ptrNow, ptrReady, ptrExit);
     return flag;
 }
 /**
@@ -93,7 +49,7 @@ int doOperation(char **instrucciones)
 {
     int retorno = 0;
 
-    if (strlen(instrucciones[0]) == 0 || strcmp("\0", instrucciones[0]) == 0||  strcmp("\n", instrucciones[0]) == 0 ||strcmp("", instrucciones[0]) == 0)
+    if (strlen(instrucciones[0]) == 0 || strcmp("\0", instrucciones[0]) == 0 || strcmp("", instrucciones[0]) == 0 || strcmp("", instrucciones[0]) == 0)
     {
         retorno = 0;
     }

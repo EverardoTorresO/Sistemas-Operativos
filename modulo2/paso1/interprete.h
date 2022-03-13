@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
+#include "cola.h"
 extern NUM AX,BX,CX,DX,TMP,PC;
 NUM tokenizer(FILE *Archivo);
-NUM executeToken(char **str,char*cad);
+NUM executeToken(PCB *ptrNow,char*cad);
 char*getCopyString( char *str, int a,int b);
 int whoOperation(char*cad);
 /*Funciones de la biblioteca*/
@@ -20,3 +20,4 @@ extern int DIV(int a, int b);
 extern int MUL(int a, int b);
 extern int INC(int a);
 extern int DEC(int a);
+extern void printSchedule(PCB *ptrRunning,PCB *ptrReady,PCB *ptrExit);

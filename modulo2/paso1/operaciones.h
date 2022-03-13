@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "cola.h"
 extern NUM AX,BX,CX,DX,TMP,PC;
 extern char IR[4];
 
@@ -36,3 +37,5 @@ NUM whoToken(char *argv);
  *
  ******************************************************************/
 int getArgumentsFrom(char *orig, char *delim, char *args[]);
+/**Funciones externas ajenas a este documento**/
+extern void saveContext(PCB *ptr);

@@ -16,7 +16,12 @@ int removeInterface();
 void getTextFromCommandLine(char *entrada);
 int instructionInterpreter(char *entrada, char ***argumentos);
 void clearLineComandToDown(int y, int x);
-int tokenizerPrint(PCB *ptrNow);
+int executeLine(PCB *ptrNow);
 int commandLine(char **arguments);
 void commandLinePointer();
+void printExecution(PCB *ptrRunning);
+void printReady(PCB *ptrReady);
+void printExit(PCB *ptrExit);
+void printSchedule(PCB *ptrRunning,PCB *ptrReady,PCB *ptrExit);
+
 #endif
