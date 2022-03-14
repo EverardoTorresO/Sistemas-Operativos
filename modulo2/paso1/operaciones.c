@@ -35,6 +35,14 @@ int getArgumentsFrom(char *orig, char *delim, char *args[])
 
     return num;
 }
+/**
+ * @brief Get the Arguments object
+ * 
+ * @param orig 
+ * @param argue 
+ * @param operation 
+ * @return int 
+ */
 int getArguments(const char *orig, char ***argue, int *operation)
 {
     int flag = 0;
@@ -53,7 +61,7 @@ int getArguments(const char *orig, char ***argue, int *operation)
         return flag;
     }
     // printf("tmp: %s", tmp);
-    if (0 == strcmp(tmp, "END") || 0 == strcmp(tmp, "END"))
+    if (0 == strcmp(tmp, "END"))
     {
         args = calloc(1, 5);
         args[0] = tmp;

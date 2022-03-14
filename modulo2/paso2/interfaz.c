@@ -23,7 +23,7 @@ int commandLine(char **arguments)
             //  Mandar llamar una función que lea el archivo indicado e inicie el interprete
             sprintf(terminalMessage, "Realizando acción EJECUTAR");
             mvprintw(0, 0, terminalMessage);
-            // executeTokenizer(arguments[1]); //Modulo1.c
+            // SUCCESSizer(arguments[1]); //Modulo1.c
             if (argc > 1)
             {
                 PCB *ptrAux = NULL;
@@ -172,8 +172,6 @@ int executeLine(PCB *ptrNow)
             str[len - 1] = '\0'; // Eliminamos el salto de línea
 
         FLAG_TOKEN = executeToken(ptrNow, str);
-        printSchedule(ptrNow, ptrReady, ptrExit);
-        fflush(stdout);
         refresh();
         usleep(SECOND);
         switch (FLAG_TOKEN)
@@ -192,8 +190,8 @@ int executeLine(PCB *ptrNow)
             return DIVIDE_BY_CERO;
         case 4:
             return BAD_INSTRUCTION;
-        case 5:
-            return SUCCES;
+        case SUCCESS:
+            return SUCCESS;
         case 6:
             return ERROR_ARGUMENTS;
         }

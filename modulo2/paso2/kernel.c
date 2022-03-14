@@ -73,9 +73,12 @@ void executePCBRunning(PCB **toRunning)
             case RUNNING:
                 mvprintw(0, 0, "Insertando En LISTOS");
                 refresh();
-                sprintf(ptrNow->status, "RUNNING");
+
                 if (counterToQuantum == Quantum)
+                {
+                    sprintf(ptrNow->status, "READY");
                     insertPCB(ptrNow, &ptrReady);
+                }
                 break;
             case END:
                 mvprintw(0, 0, "Insertando En LISTOS");
@@ -91,10 +94,13 @@ void executePCBRunning(PCB **toRunning)
                 break;
             case READY:
                 break;
-            case SUCCES:
+            case SUCCESS:
                 refresh();
                 if (counterToQuantum == Quantum)
+                {
+                    sprintf(ptrNow->status, "READY");
                     insertPCB(ptrNow, &ptrReady);
+                }
             default:
                 resetVar();
                 break;
@@ -132,8 +138,8 @@ int executeIR(PCB *ptrNow)
     case BAD_INSTRUCTION:
         return ERROR;
         return BAD_INSTRUCTION;
-    case SUCCES:
-        return SUCCES;
+    case SUCCESS:
+        return SUCCESS;
     case ERROR_ARGUMENTS:
         return ERROR;
         return ERROR_ARGUMENTS;

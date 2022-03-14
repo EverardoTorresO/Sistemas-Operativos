@@ -23,6 +23,9 @@ PCB *makePCB(unsigned int id, char *archivoNombre)
     strcpy(ptr->archivoNombre, archivoNombre);
     ptr->id = id;
     ptr->archivo = fopen(archivoNombre, "r");
+    if(ptr->archivo==NULL){
+        return NULL;
+    }
     ptr->next = NULL;
     sprintf(ptr->IR," ");
     ptr->AX=0;

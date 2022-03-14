@@ -21,9 +21,9 @@ NUM executeToken(PCB *ptrNow, char *cad)
     saveContext(ptrNow);
     if (flag && argc > 0)
     {
-        if (flag == 5)
+        PC++;
+        if (flag == SUCCESS)
         {
-            PC++;
             printSchedule(ptrNow, ptrReady, ptrExit);
         }
         // sprintf(*source, "IR:%s   \tPC:%d,\tAX:%d,\tBX:%d,\tCX:%d,\tDX:%d", cad, PC, AX, BX, CX, DX);
@@ -58,7 +58,7 @@ int doOperation(char **instrucciones)
         if (strcmp("MOV", instrucciones[0]) == 0)
         {
             strcpy(IR, "MOV");
-            retorno = 5;
+            retorno = SUCCESS;
             switch (getRegister(instrucciones[1]))
             {
             case 1:
@@ -81,7 +81,7 @@ int doOperation(char **instrucciones)
         else if (strcmp("ADD", instrucciones[0]) == 0)
         {
             strcpy(IR, "ADD");
-            retorno = 5;
+            retorno = SUCCESS;
             switch (getRegister(instrucciones[1]))
             {
             case 1:
@@ -104,7 +104,7 @@ int doOperation(char **instrucciones)
         else if (strcmp("SUB", instrucciones[0]) == 0)
         {
             strcpy(IR, "SUB");
-            retorno = 5;
+            retorno = SUCCESS;
             switch (getRegister(instrucciones[1]))
             {
             case 1:
@@ -127,7 +127,7 @@ int doOperation(char **instrucciones)
         else if (strcmp("MUL", instrucciones[0]) == 0)
         {
             strcpy(IR, "MUL");
-            retorno = 5;
+            retorno = SUCCESS;
             switch (getRegister(instrucciones[1]))
             {
             case 1:
@@ -150,7 +150,7 @@ int doOperation(char **instrucciones)
         else if (strcmp("DIV", instrucciones[0]) == 0)
         {
             strcpy(IR, "DIV");
-            retorno = 5;
+            retorno = SUCCESS;
             if (getValue(instrucciones[2]) == 0)
             {
                 retorno = 3;
@@ -180,7 +180,7 @@ int doOperation(char **instrucciones)
         else if (strcmp("INC", instrucciones[0]) == 0)
         {
             strcpy(IR, "INC");
-            retorno = 5;
+            retorno = SUCCESS;
             switch (getRegister(instrucciones[1]))
             {
             case 1:
@@ -203,7 +203,7 @@ int doOperation(char **instrucciones)
         else if (strcmp("DEC", instrucciones[0]) == 0)
         {
             strcpy(IR, "DEC");
-            retorno = 5;
+            retorno = SUCCESS;
             switch (getRegister(instrucciones[1]))
             {
             case 1:
