@@ -16,6 +16,7 @@
 #else
 #include <unistd.h>
 #endif
+#include <termios.h>
 typedef enum OPERATION_CODE
 {
     DIVIDE_BY_CERO = -50,
@@ -41,4 +42,5 @@ typedef enum COMMAND_LINE
    KILL=2,
    CREATE=3
 } COMMAND_LINE;
+int kbhit(void);
 #endif

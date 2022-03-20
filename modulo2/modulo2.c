@@ -26,25 +26,8 @@ unsigned int CounterPCBID = 0;
 
 #include "kernel.h"
 
-unsigned int Quantum = 1;
+unsigned int Quantum = 3,counterToQuantum;
 
-int kbhit(void)
-{
-    struct timeval tv;
-    fd_set read_fd;
-    tv.tv_sec = 0;
-    tv.tv_usec = 0;
-    FD_ZERO(&read_fd);
-    FD_SET(0, &read_fd);
-
-    if (select(1, &read_fd, NULL, NULL, &tv) == -1)
-        return 0;
-
-    if (FD_ISSET(0, &read_fd))
-        return 1;
-
-    return 0;
-}
 int main(void)
 {
 
@@ -81,7 +64,7 @@ int main(void)
             schedulingShortTerm(&ptrReady, &ptrRunning, &ptrExit);
             commandLinePointer();
             printSchedule(ptrRunning, ptrReady, ptrExit);
-            usleep(SECOND * DELAY_TIMER);
+            usleep(MILISECOND * DELAY_TIMER);
         }
     }
     freeMemoryListPCB(&ptrReady);

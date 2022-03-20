@@ -133,7 +133,7 @@ int executeLine(PCB *ptrNow)
 
         FLAG_TOKEN = executeToken(ptrNow, str);
         refresh();
-        usleep(SECOND);
+        usleep(MILISECOND * DELAY_TIMER * 500);
         switch (FLAG_TOKEN)
         {
         case INVALID_ARGUMENTS:
@@ -268,6 +268,7 @@ void printSchedule(PCB *ptrRunning, PCB *ptrReady, PCB *ptrExit)
     printExecution(ptrRunning);
     printReady(ptrReady);
     printExit(ptrExit);
+    commandLinePointer();
     refresh();
 }
 void makeReadys(int argc, char **arguments)
@@ -302,7 +303,7 @@ void makeReadys(int argc, char **arguments)
                 printw(terminalMessage);
                 refresh();
                 // Second * Seconds
-                usleep(1000000 * DELAY_TIMER);
+                usleep(SECOND * DELAY_TIMER);
                 move(0, 0);
                 clrtoeol();
                 refresh();
@@ -313,20 +314,16 @@ void makeReadys(int argc, char **arguments)
 }
 void killPCB(int argc, char **arguments)
 {
-    
-    if (argc > 1)
+    PCB *ptrAux = NULL, *ptr = NULL;
+    if (argc > 2)
     {
 
-        PCB *ptrAux = NULL;
         for (int i = 1; i < argc; i++)
         {
             int id = atoi(arguments[i]);
-            
-          
+
             if ((ptrAux = findPCB(id, &ptrRunning)) != NULL)
             {
-                mvprintw(5,0,"Matando PCB con ID %d",id);
-                  refresh();
                 saveContext(ptrAux);
                 sprintf(ptrAux->status, "KILLED");
                 fclose(ptrAux->archivo);
@@ -334,11 +331,68 @@ void killPCB(int argc, char **arguments)
             }
             else if ((ptrAux = findPCB(id, &ptrReady)) != NULL)
             {
-                mvprintw(5,0,"Matando PCB con ID %d",id);
-                  refresh();
                 sprintf(ptrAux->status, "KILLED");
                 fclose(ptrAux->archivo);
                 insertPCB(ptrAux, &ptrExit);
+            }
+            else
+            {
+                move(0, 0);
+                clrtoeol();
+                printw("Error en el comado Matar, argumento %s es incorrecto", arguments[i]);
+                refresh();
+                usleep(SECOND*DELAY_TIMER);
+            }
+        }
+    }
+    else if (argc == 2)
+    {
+
+        if (NULL!=strstr(arguments[1],"*"))
+        {
+            if ((ptrAux = extractFirstPCB(&ptrRunning)) != NULL)
+            {
+                saveContext(ptrAux);
+                sprintf(ptrAux->status, "KILLED");
+                fclose(ptrAux->archivo);
+                insertPCB(ptrAux, &ptrExit);
+            }
+            if (ptrReady != NULL)
+                do
+                {
+                    ptr = ptrReady->next;
+                    ptrAux = extractFirstPCB(&ptrReady);
+
+                    sprintf(ptrAux->status, "KILLED");
+                    fclose(ptrAux->archivo);
+                    insertPCB(ptrAux, &ptrExit);
+
+                } while (ptr != NULL);
+        }
+        else
+        {
+            int id = atoi(arguments[1]);
+
+            if ((ptrAux = findPCB(id, &ptrRunning)) != NULL)
+            {
+                saveContext(ptrAux);
+                sprintf(ptrAux->status, "KILLED");
+                fclose(ptrAux->archivo);
+                insertPCB(ptrAux, &ptrExit);
+            }
+            else if ((ptrAux = findPCB(id, &ptrReady)) != NULL)
+            {
+                sprintf(ptrAux->status, "KILLED");
+                fclose(ptrAux->archivo);
+                insertPCB(ptrAux, &ptrExit);
+            }
+            else
+            {
+                move(0, 0);
+                clrtoeol();
+                printw("Error en el comado Matar, argumento %s es incorrecto", arguments[1]);
+                refresh();
+                usleep(SECOND*DELAY_TIMER);
             }
         }
     }
@@ -347,5 +401,6 @@ void killPCB(int argc, char **arguments)
         move(0, 0);
         printw("Falta el ID del PCB que quiere matar");
         refresh();
+        usleep(SECOND*DELAY_TIMER);
     }
 }

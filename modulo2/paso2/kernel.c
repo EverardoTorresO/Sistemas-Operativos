@@ -1,5 +1,6 @@
 #include "kernel.h"
-extern unsigned int Quantum;
+
+extern unsigned int Quantum, counterToQuantum;
 extern PCB *ptrReady, *ptrRunning, *ptrExit;
 extern int AX, BX, CX, DX, PC, TMP;
 void resetVar()
@@ -14,18 +15,24 @@ void resetVar()
 
 void schedulingShortTerm(PCB **ptrReady_1, PCB **ptrRunning_1, PCB **ptrExit_1)
 {
-
-    if ((*ptrRunning_1 = getRunning(ptrReady_1)) != NULL)
+    if (*ptrRunning_1 == NULL)
     {
-        move(0, 0);
-        clrtoeol();
-        refresh();
-        executePCBRunning(ptrRunning_1);
+        if ((*ptrRunning_1 = getRunning(ptrReady_1)) != NULL)
+        {
+            move(0, 0);
+            clrtoeol();
+            refresh();
+            executePCBRunning(ptrRunning_1);
+        }
+        else
+        {
+            mvprintw(0, 0, "Ingrese Algun Comando: PTC esta de Osioso");
+            refresh();
+        }
     }
     else
     {
-        mvprintw(0, 0, "Ingrese Algun Comando: PTC esta de Osioso");
-        refresh();
+        executePCBRunning(ptrRunning_1);
     }
 }
 PCB *getRunning(PCB **ptrReady_1)
@@ -35,7 +42,7 @@ PCB *getRunning(PCB **ptrReady_1)
 }
 void executePCBRunning(PCB **toRunning)
 {
-    unsigned int counterToQuantum = 0;
+
     if (*toRunning != NULL)
     {
         PCB *ptrNow = extractFirstPCB(toRunning);
@@ -44,16 +51,17 @@ void executePCBRunning(PCB **toRunning)
             mvprintw(0, 0, "Cargando Contexto");
             refresh();
             loadContext(ptrNow);
-        }else   if (!strcmp(ptrNow->status, "KILLED"))
+        }
+        else if (!strcmp(ptrNow->status, "KILLED"))
         {
-            insertPCB(ptrNow,&ptrExit);
-        }else   if (!strcmp(ptrNow->status, "READY"))
+            insertPCB(ptrNow, &ptrExit);
+        }
+        else if (!strcmp(ptrNow->status, "READY"))
         {
             sprintf(ptrNow->status, "RUNNING");
         }
 
-       
-        while (Quantum > counterToQuantum && ((0 == strcmp(ptrNow->status, "WAITING")) || (0 == strcmp(ptrNow->status, "RUNNING"))))
+        if (Quantum > counterToQuantum && ((0 == strcmp(ptrNow->status, "WAITING")) || (0 == strcmp(ptrNow->status, "RUNNING"))))
         {
             move(0, 0);
             clrtoeol();
@@ -67,18 +75,23 @@ void executePCBRunning(PCB **toRunning)
             counterToQuantum++;
             move(2, 0);
             clrtoeol();
-            mvprintw(2, 0, "flagPCB %d", flagPCB);
+            mvprintw(2, 0, "flagPCB %d, quantum %d", flagPCB, counterToQuantum);
             refresh();
             switch (flagPCB)
             {
             case RUNNING:
                 mvprintw(0, 0, "Insertando En LISTOS");
                 refresh();
-
-                if (counterToQuantum == Quantum)
+                if (counterToQuantum < Quantum)
+                {
+                    sprintf(ptrNow->status, "RUNNING");
+                    insertPCB(ptrNow, &ptrRunning);
+                }
+                else if (counterToQuantum == Quantum)
                 {
                     sprintf(ptrNow->status, "READY");
                     insertPCB(ptrNow, &ptrReady);
+                    counterToQuantum = 0;
                 }
                 break;
             case END:
@@ -97,16 +110,23 @@ void executePCBRunning(PCB **toRunning)
                 break;
             case SUCCESS:
                 refresh();
-                if (counterToQuantum == Quantum)
+                if (counterToQuantum < Quantum)
+                {
+                    sprintf(ptrNow->status, "RUNNING");
+                    insertPCB(ptrNow, &ptrRunning);
+                }
+                else if (counterToQuantum == Quantum)
                 {
                     sprintf(ptrNow->status, "READY");
                     insertPCB(ptrNow, &ptrReady);
+                    counterToQuantum = 0;
                 }
                 break;
             case ERROR_CLOSE_FILE:
                 mvprintw(0, 0, "Error en el Archivo");
-                sprintf(ptrNow->status,"ERROR File");
+                sprintf(ptrNow->status, "ERROR File");
                 insertPCB(ptrNow, &ptrExit);
+                counterToQuantum = 0;
 
                 refresh();
             default:
