@@ -20,16 +20,25 @@ typedef enum OPERATION_CODE
 {
     DIVIDE_BY_CERO = -50,
     EMPTY_IR = -51,
-    BAD_REGISTER=-52,
-    BAD_INSTRUCTION=-53,
-    SUCCESS=-54,
-    ERROR_ARGUMENTS=-55,
-    INVALID_ARGUMENTS=-56
+    BAD_REGISTER = -52,
+    BAD_INSTRUCTION = -53,
+    SUCCESS = -54,
+    ERROR_ARGUMENTS = -55,
+    INVALID_ARGUMENTS = -56,
+    ERROR_CLOSE_FILE=-57
 } OPERATION_CODE;
-typedef enum STATUS_PCB{
+typedef enum STATUS_PCB
+{
     END = -2,
     ERROR = -1,
     READY = 0,
     RUNNING = 1,
-    WAITING=2} STATUS_PCB;
+    WAITING = 2
+} STATUS_PCB;
+typedef enum COMMAND_LINE
+{
+   QUIT=1,
+   KILL=2,
+   CREATE=3
+} COMMAND_LINE;
 #endif

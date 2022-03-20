@@ -6,7 +6,7 @@ char terminalMessage[MAX_TERMINAL_STRING];
 char warningMessage[MAX_TERMINAL_STRING];
 extern unsigned int CounterPCBID;
 extern PCB *ptrReady, *ptrRunning, *ptrExit;
-int commandLine(char **arguments)
+int commandLine(int *argc, char **arguments)
 {
     char entrada[100];
     getTextFromCommandLine(entrada);
@@ -16,60 +16,20 @@ int commandLine(char **arguments)
     }
     else
     {
-        int argc = getArgumentsFrom(entrada, " ", arguments);
+        *argc = getArgumentsFrom(entrada, " ", arguments);
         if (strcmp(arguments[0], "ejecutar") == 0 || strcmp(arguments[0], "Ejecutar") == 0 || strcmp(arguments[0], "x") == 0)
         {
-            // clearLineComandToDown(2, 0);
-            //  Mandar llamar una función que lea el archivo indicado e inicie el interprete
             sprintf(terminalMessage, "Realizando acción EJECUTAR");
             mvprintw(0, 0, terminalMessage);
-            // SUCCESSizer(arguments[1]); //Modulo1.c
-            if (argc > 1)
-            {
-                PCB *ptrAux = NULL;
-                for (int i = 1; i < argc; i++)
-                {
-                    CounterPCBID++;
-                    // Se crea pcb por cada archivo, si existe, y se agregan a la cola Ready
-                    if ((ptrAux = makePCB(CounterPCBID, arguments[i])) != NULL)
-                    {
-                        insertPCB(ptrAux, &ptrReady);
-                        move(0, 0);
-                        clrtoeol();
-                        sprintf(terminalMessage, "Realizando acción EJECUTAR;Creando el PCB con el ID %d  Archivo: \"%s\"", CounterPCBID, arguments[i]);
-                        printw(terminalMessage);
-                        refresh();
-                        // Second * Seconds
-                        move(0, 0);
-                        clrtoeol();
-                        refresh();
-                    }
-                    else
-                    {
-
-                        move(0, 0);
-                        clrtoeol();
-                        sprintf(terminalMessage, "El PCB con el supuesto ID %d, Detecto que el Archivo \"%s\" NO EXISTE", CounterPCBID, arguments[i]);
-                        printw(terminalMessage);
-                        refresh();
-                        // Second * Seconds
-                        usleep(1000000 * DELAY_TIMER);
-                        move(0, 0);
-                        clrtoeol();
-                        refresh();
-                        CounterPCBID--;
-                    }
-                }
-            }
-            // schedulingShortTerm(&ptrReady, &ptrRunning, &ptrExit);
-            //  resetVar();//Modulo1.c
+            return CREATE;
         }
         else if (strcmp(arguments[0], "matar") == 0 || strcmp(arguments[0], "Matar") == 0 || strcmp(arguments[0], "k") == 0)
         {
             mvprintw(0, 0, "Realizando acción MATAR");
+            return KILL;
         }
         else if (strcmp(arguments[0], "salir") == 0 || strcmp(arguments[0], "q") == 0)
-            return 1;
+            return QUIT;
         else if (strcmp(arguments[0], "clear") == 0 || strcmp(arguments[0], "c") == 0)
         {
             clearLineComandToDown(2, 0);
@@ -196,7 +156,7 @@ int executeLine(PCB *ptrNow)
             return ERROR_ARGUMENTS;
         }
     }
-    return END;
+    return ERROR_CLOSE_FILE;
 }
 void printExecution(PCB *ptrRunning)
 {
@@ -309,4 +269,83 @@ void printSchedule(PCB *ptrRunning, PCB *ptrReady, PCB *ptrExit)
     printReady(ptrReady);
     printExit(ptrExit);
     refresh();
+}
+void makeReadys(int argc, char **arguments)
+{
+
+    if (argc > 1)
+    {
+        PCB *ptrAux = NULL;
+        for (int i = 1; i < argc; i++)
+        {
+            CounterPCBID++;
+            // Se crea pcb por cada archivo, si existe, y se agregan a la cola Ready
+            if ((ptrAux = makePCB(CounterPCBID, arguments[i])) != NULL)
+            {
+                insertPCB(ptrAux, &ptrReady);
+                move(0, 0);
+                clrtoeol();
+                sprintf(terminalMessage, "Realizando acción EJECUTAR;Creando el PCB con el ID %d  Archivo: \"%s\"", CounterPCBID, arguments[i]);
+                printw(terminalMessage);
+                refresh();
+                // Second * Seconds
+                move(0, 0);
+                clrtoeol();
+                refresh();
+            }
+            else
+            {
+
+                move(0, 0);
+                clrtoeol();
+                sprintf(terminalMessage, "El PCB con el supuesto ID %d, Detecto que el Archivo \"%s\" NO EXISTE", CounterPCBID, arguments[i]);
+                printw(terminalMessage);
+                refresh();
+                // Second * Seconds
+                usleep(1000000 * DELAY_TIMER);
+                move(0, 0);
+                clrtoeol();
+                refresh();
+                CounterPCBID--;
+            }
+        }
+    }
+}
+void killPCB(int argc, char **arguments)
+{
+    
+    if (argc > 1)
+    {
+
+        PCB *ptrAux = NULL;
+        for (int i = 1; i < argc; i++)
+        {
+            int id = atoi(arguments[i]);
+            
+          
+            if ((ptrAux = findPCB(id, &ptrRunning)) != NULL)
+            {
+                mvprintw(5,0,"Matando PCB con ID %d",id);
+                  refresh();
+                saveContext(ptrAux);
+                sprintf(ptrAux->status, "KILLED");
+                fclose(ptrAux->archivo);
+                insertPCB(ptrAux, &ptrExit);
+            }
+            else if ((ptrAux = findPCB(id, &ptrReady)) != NULL)
+            {
+                mvprintw(5,0,"Matando PCB con ID %d",id);
+                  refresh();
+                sprintf(ptrAux->status, "KILLED");
+                fclose(ptrAux->archivo);
+                insertPCB(ptrAux, &ptrExit);
+            }
+        }
+    }
+    else
+    {
+        move(0, 0);
+        printw("Falta el ID del PCB que quiere matar");
+        refresh();
+    }
 }

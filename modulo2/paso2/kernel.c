@@ -11,12 +11,7 @@ void resetVar()
     TMP = 0;
     PC = 0;
 }
-void executePCBExit(PCB **ptrTo)
-{
-    if (ptrTo != NULL)
-    {
-    }
-}
+
 void schedulingShortTerm(PCB **ptrReady_1, PCB **ptrRunning_1, PCB **ptrExit_1)
 {
 
@@ -29,7 +24,6 @@ void schedulingShortTerm(PCB **ptrReady_1, PCB **ptrRunning_1, PCB **ptrExit_1)
     }
     else
     {
-        executePCBExit(ptrExit_1);
         mvprintw(0, 0, "Ingrese Algun Comando: PTC esta de Osioso");
         refresh();
     }
@@ -50,8 +44,15 @@ void executePCBRunning(PCB **toRunning)
             mvprintw(0, 0, "Cargando Contexto");
             refresh();
             loadContext(ptrNow);
+        }else   if (!strcmp(ptrNow->status, "KILLED"))
+        {
+            insertPCB(ptrNow,&ptrExit);
+        }else   if (!strcmp(ptrNow->status, "READY"))
+        {
+            sprintf(ptrNow->status, "RUNNING");
         }
-        sprintf(ptrNow->status, "RUNNING");
+
+       
         while (Quantum > counterToQuantum && ((0 == strcmp(ptrNow->status, "WAITING")) || (0 == strcmp(ptrNow->status, "RUNNING"))))
         {
             move(0, 0);
@@ -101,6 +102,13 @@ void executePCBRunning(PCB **toRunning)
                     sprintf(ptrNow->status, "READY");
                     insertPCB(ptrNow, &ptrReady);
                 }
+                break;
+            case ERROR_CLOSE_FILE:
+                mvprintw(0, 0, "Error en el Archivo");
+                sprintf(ptrNow->status,"ERROR File");
+                insertPCB(ptrNow, &ptrExit);
+
+                refresh();
             default:
                 resetVar();
                 break;

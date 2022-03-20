@@ -32,7 +32,6 @@ int getArgumentsFrom(char *orig, char *delim, char *args[])
         /* Extraemos la siguiente palabra */
         tmp = strtok(NULL, delim);
     } while (tmp != NULL);
-
     return num;
 }
 /**

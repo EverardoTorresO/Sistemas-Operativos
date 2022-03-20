@@ -11,21 +11,22 @@
 #include "default.h"
 char mensajeWarning[MAX_TERMINAL_STRING];
 char terminalMesage[MAX_TERMINAL_STRING];
-#include "interfaz.h"
-#include "interprete.h"
-#include "operaciones.h"
-
-#include <unistd.h>
-#include <termios.h>
-#include <unistd.h>
-#include "cola.h"
-#include "kernel.h"
 NUM AX, BX, CX, DX, TMP, PC;
 char IR[4];
+#include "cola.h"
 PCB *ptrReady, *ptrRunning, *ptrExit;
 unsigned int CounterPCBID = 0;
 
-unsigned int Quantum = 3;
+#include "interfaz.h"
+#include "interprete.h"
+#include "operaciones.h"
+#include <unistd.h>
+#include <termios.h>
+#include <unistd.h>
+
+#include "kernel.h"
+
+unsigned int Quantum = 1;
 
 int kbhit(void)
 {
@@ -52,23 +53,41 @@ int main(void)
     while (1)
     {
         if (kbhit() == 1)
-        {   
+        {
             commandLinePointer();
             char *arguments[MAX_ARGS];
-            if (commandLine(arguments))
+            int argc;
+
+            switch (commandLine(&argc, arguments))
+            {
+            case QUIT:
+                freeMemoryListPCB(&ptrReady);
+                freeMemoryListPCB(&ptrRunning);
+                freeMemoryListPCB(&ptrExit);
+                removeInterface();
+                return 0;
+            case CREATE:
+                makeReadys(argc, arguments);
                 break;
+
+            case KILL:
+                killPCB(argc, arguments);
+
+                break;
+            }
         }
         else
         {
             schedulingShortTerm(&ptrReady, &ptrRunning, &ptrExit);
             commandLinePointer();
-            printSchedule(ptrRunning,ptrReady,ptrExit);
-            usleep(SECOND*DELAY_TIMER);
+            printSchedule(ptrRunning, ptrReady, ptrExit);
+            usleep(SECOND * DELAY_TIMER);
         }
     }
     freeMemoryListPCB(&ptrReady);
     freeMemoryListPCB(&ptrRunning);
     freeMemoryListPCB(&ptrExit);
     removeInterface();
+
     return 0;
 }

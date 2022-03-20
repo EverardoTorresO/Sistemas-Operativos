@@ -17,11 +17,12 @@ void getTextFromCommandLine(char *entrada);
 int instructionInterpreter(char *entrada, char ***argumentos);
 void clearLineComandToDown(int y, int x);
 int executeLine(PCB *ptrNow);
-int commandLine(char **arguments);
+int commandLine(int *argc,char **arguments);
 void commandLinePointer();
 void printExecution(PCB *ptrRunning);
 void printReady(PCB *ptrReady);
 void printExit(PCB *ptrExit);
 void printSchedule(PCB *ptrRunning,PCB *ptrReady,PCB *ptrExit);
-
+void makeReadys(int argc,char **arguments);
+void killPCB(int argc,char **arguments);
 #endif
