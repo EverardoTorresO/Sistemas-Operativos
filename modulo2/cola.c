@@ -7,6 +7,7 @@ extern char terminalMessage[MAX_TERMINAL_STRING];
 extern char IR[4];
 extern PCB *ptrReady, *ptrRunning, *ptrExit;
 extern unsigned int CounterPCBID;
+/* Imprime los PCB con printf de ptrToInsert*/
 void printPtrPCB(PCB *ptrToInsert)
 {
     PCB *ptrAux, *ptr = ptrToInsert;
@@ -25,6 +26,7 @@ void printPtrPCB(PCB *ptrToInsert)
         // printf("La Lista apunta a NULL");
     }
 }
+/* Crea un PCB con un id y el nombre del archivo, incializa todo en 0*/
 PCB *makePCB(unsigned int id, char *archivoNombre)
 {
     // printf("Creando PCB\n");
@@ -48,6 +50,7 @@ PCB *makePCB(unsigned int id, char *archivoNombre)
 
     return ptr;
 }
+/** Inserta un PCB(PCB *toInsert) en PCB **head **/
 void insertPCB(PCB *toInsert, PCB **head)
 {
     PCB *ptrAux = NULL, *ptr = *head;
@@ -67,33 +70,7 @@ void insertPCB(PCB *toInsert, PCB **head)
         ptrAux->next = toInsert;
     }
 }
-PCB *extractPCB(unsigned int id, PCB **ptrHead)
-{
-    PCB *ptrAux = NULL, *ptr = *ptrHead;
-    if (ptr == NULL)
-    {
-        return NULL;
-    }
-    else
-    {
-        do
-        {
-            // printf("Imprimiendo Queu: %d%s", ptr->id, ptr->archivoNombre);
-            ptrAux = ptr;
-            ptr = ptrAux->next;
-        } while (ptr->id != id && ptr != NULL);
-        if (ptr != NULL)
-        {
-            if (ptr->id == id)
-            {
-                ptrAux->next = ptr->next;
-                ptr->next = NULL;
-                return ptr;
-            }
-        }
-        return NULL;
-    }
-}
+
 PCB *findPCB(unsigned int id, PCB **ptrHead)
 {
     PCB *ptrAux = NULL, *ptr = *ptrHead;
@@ -128,6 +105,7 @@ PCB *findPCB(unsigned int id, PCB **ptrHead)
     }
     return NULL;
 }
+
 void deletePCB(PCB **pcb)
 {
     // printf("Eliminado ID %d\n", (*pcb)->id);

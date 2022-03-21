@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "interprete.h": "c",
+        "interfaz.h": "c",
+        "operaciones.h": "c",
+        "cola.h": "c"
+    }
+}

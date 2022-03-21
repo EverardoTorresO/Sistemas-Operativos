@@ -91,7 +91,10 @@ int tokenizerPrint(FILE *Archivo)
 
         FLAG_TOKEN = executeToken(&print, str);
         fflush(stdout);
+        
         mvprintw(++renglon, 0, "%s\n", print);
+        usleep(1000000);
+        refresh();
         switch (FLAG_TOKEN)
         {
         case 0:
